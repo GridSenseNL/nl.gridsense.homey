@@ -23,7 +23,24 @@
     "xlarge": "/assets/images/xlarge.png"
   },
   "author": {
-    "name": "Zandor Smith",
-    "email": "info@zsinfo.nl"
-  }
+    "name": "GridSense B.V.",
+    "email": "info@gridsense.nl"
+  },
+  "drivers": [
+    {
+      "id": "gridsense-gateway",
+      "name": {
+        "en": "GridSense Gateway"
+      },
+      "class": "other"
+    },
+    {
+      "id": "gridsense-battery",
+      "name": {
+        "en": "GridSense Home Battery"
+      },
+      "class": "battery"
+    }
+  ],
+  "homepage": "https://gridsense.nl/"
 }

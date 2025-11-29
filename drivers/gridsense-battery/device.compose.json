@@ -1,0 +1,57 @@
+{
+  "name": {
+    "en": "GridSense Home Battery"
+  },
+  "class": "battery",
+  "capabilities": [
+    "measure_power",
+    "meter_power.imported",
+    "meter_power.exported"
+  ],
+  "settings": [
+    {
+      "id": "ipAddress",
+      "type": "text",
+      "label": {
+        "en": "Gateway IP address"
+      }
+    },
+    {
+      "id": "port",
+      "type": "number",
+      "label": {
+        "en": "Gateway port"
+      },
+      "value": 3000
+    },
+    {
+      "id": "gatewayUuid",
+      "type": "text",
+      "label": {
+        "en": "Gateway UUID"
+      }
+    },
+    {
+      "id": "deviceGroupId",
+      "type": "text",
+      "label": {
+        "en": "Battery group ID"
+      }
+    },
+    {
+      "id": "batteryIndex",
+      "type": "number",
+      "label": {
+        "en": "Battery index"
+      }
+    },
+    {
+      "id": "serialNumber",
+      "type": "text",
+      "label": {
+        "en": "Battery serial number"
+      }
+    }
+  ],
+  "device": "drivers/gridsense-battery/device.js"
+}

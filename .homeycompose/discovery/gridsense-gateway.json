@@ -1,0 +1,8 @@
+{
+  "type": "mdns-sd",
+  "mdns-sd": {
+    "name": "gridsense-homey",
+    "protocol": "tcp"
+  },
+  "id": "{{txt.uuid}}"
+}

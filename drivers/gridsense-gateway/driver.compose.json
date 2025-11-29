@@ -1,0 +1,24 @@
+{
+  "id": "gridsense-gateway",
+  "name": {
+    "en": "GridSense Gateway"
+  },
+  "class": "other",
+  "driver": "drivers/gridsense-gateway/driver.js",
+  "pair": [
+    {
+      "id": "list_devices",
+      "template": "list_devices",
+      "navigation": { "next": "add_devices" },
+      "options": { "singular": true }
+    },
+    {
+      "id": "add_devices",
+      "template": "add_devices"
+    }
+  ],
+  "platforms": ["local"],
+  "connectivity": ["lan"],
+  "capabilities": [],
+  "discovery": "gridsense-gateway"
+}

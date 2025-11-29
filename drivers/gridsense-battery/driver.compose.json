@@ -1,0 +1,33 @@
+{
+  "id": "gridsense-battery",
+  "name": {
+    "en": "GridSense Home Battery"
+  },
+  "class": "battery",
+  "platforms": ["local"],
+  "driver": "drivers/gridsense-battery/driver.js",
+  "pair": [
+    {
+      "id": "list_devices",
+      "template": "list_devices",
+      "navigation": {
+        "next": "add_devices"
+      }
+    },
+    {
+      "id": "add_devices",
+      "template": "add_devices"
+    }
+  ],
+  "connectivity": ["lan"],
+  "capabilities": [
+    "measure_power",
+    "meter_power.imported",
+    "meter_power.exported"
+  ],
+  "energy": {
+    "homeBattery": true,
+    "meterPowerImportedCapability": "meter_power.imported",
+    "meterPowerExportedCapability": "meter_power.exported"
+  }
+}
