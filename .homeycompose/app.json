@@ -1,0 +1,29 @@
+{
+  "id": "nl.gridsense.homey",
+  "version": "1.0.0",
+  "compatibility": ">=12.4.0",
+  "sdk": 3,
+  "platforms": [
+    "local",
+    "cloud"
+  ],
+  "name": {
+    "en": "GridSense"
+  },
+  "description": {
+    "en": "Integrate GridSense Energy Management into your Homey ecosystem."
+  },
+  "category": [
+    "energy"
+  ],
+  "permissions": [],
+  "images": {
+    "small": "/assets/images/small.png",
+    "large": "/assets/images/large.png",
+    "xlarge": "/assets/images/xlarge.png"
+  },
+  "author": {
+    "name": "Zandor Smith",
+    "email": "info@zsinfo.nl"
+  }
+}
