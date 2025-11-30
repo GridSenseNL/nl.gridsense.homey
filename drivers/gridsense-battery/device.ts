@@ -88,7 +88,6 @@ module.exports = class GridSenseBatteryDevice extends Homey.Device {
       );
     }
 
-    // Optional: SoE → measure_battery
-    // const soePct = Math.round(battery.soe * 100);
+    await this.setCapabilityValue('measure_battery', Math.round(battery.soe));
   }
 };
