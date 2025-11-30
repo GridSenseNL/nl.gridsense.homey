@@ -40,6 +40,13 @@
         "en": "GridSense Home Battery"
       },
       "class": "battery"
+    },
+    {
+      "id": "gridsense-gridmeter",
+      "name": {
+        "en": "GridSense Export+Import Meter"
+      },
+      "class": "sensor"
     }
   ],
   "homepage": "https://gridsense.nl/"

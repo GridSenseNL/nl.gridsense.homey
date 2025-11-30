@@ -1,0 +1,33 @@
+{
+  "id": "gridsense-gridmeter",
+  "name": {
+    "en": "GridSense Export+Import Meter"
+  },
+  "class": "sensor",
+  "platforms": ["local"],
+  "driver": "drivers/gridsense-gridmeter/driver.js",
+  "pair": [
+    {
+      "id": "list_devices",
+      "template": "list_devices",
+      "navigation": {
+        "next": "add_devices"
+      }
+    },
+    {
+      "id": "add_devices",
+      "template": "add_devices"
+    }
+  ],
+  "connectivity": ["lan"],
+  "capabilities": [
+    "measure_power",
+    "meter_power.imported",
+    "meter_power.exported"
+  ],
+  "energy": {
+    "cumulative": true,
+    "cumulativeImportedCapability": "meter_power.imported",
+    "cumulativeExportedCapability": "meter_power.exported"
+  }
+}

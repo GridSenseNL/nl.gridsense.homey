@@ -1,0 +1,50 @@
+{
+  "name": {
+    "en": "GridSense Export+Import Meter"
+  },
+  "class": "sensor",
+  "capabilities": [
+    "measure_power",
+    "meter_power.imported",
+    "meter_power.exported"
+  ],
+  "settings": [
+    {
+      "id": "ipAddress",
+      "type": "text",
+      "label": {
+        "en": "Gateway IP address"
+      }
+    },
+    {
+      "id": "port",
+      "type": "number",
+      "label": {
+        "en": "Gateway port"
+      },
+      "value": 3000
+    },
+    {
+      "id": "gatewayUuid",
+      "type": "text",
+      "label": {
+        "en": "Gateway UUID"
+      }
+    },
+    {
+      "id": "meterId",
+      "type": "text",
+      "label": {
+        "en": "Meter identifier"
+      }
+    },
+    {
+      "id": "serialNumber",
+      "type": "text",
+      "label": {
+        "en": "Meter serial number"
+      }
+    }
+  ],
+  "device": "drivers/gridsense-gridmeter/device.js"
+}

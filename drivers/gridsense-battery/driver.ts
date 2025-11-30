@@ -21,8 +21,7 @@ module.exports = class GridSenseBatteryDriver extends Homey.Driver {
     for (const gw of gatewayDevices) {
       const ip = (gw.getSetting('ipAddress') as string) || '';
       const port = (gw.getSetting('port') as number) || 3000;
-      const gatewayUuid =
-        (gw.getSetting('uuid') as string) || (gw.getData() as any).id;
+      const gatewayUuid = (gw.getSetting('uuid') as string) || (gw.getData() as any).id;
 
       if (!ip) {
         this.homey.log(
@@ -59,19 +58,19 @@ module.exports = class GridSenseBatteryDriver extends Homey.Driver {
         const name =
           `${defaultName} (${serial || ip})`.replace(/\s+/g, ' ').trim();
 
-        const id = `${gatewayUuid}:battery:${desc.groupId}:${desc.index}`;
+        // stable identity:
+        const id = desc.batteryId;
 
         devices.push({
           name,
           data: {
-            id,
+            id, // batteryId only
           },
           settings: {
             ipAddress: ip,
             port,
             gatewayUuid,
-            deviceGroupId: desc.groupId,
-            batteryIndex: desc.index,
+            batteryId: desc.batteryId,
             serialNumber: serial,
           },
         });

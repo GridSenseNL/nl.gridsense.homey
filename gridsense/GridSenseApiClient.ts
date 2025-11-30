@@ -1,3 +1,8 @@
+// src/gridsense/GridSenseApiClient.ts
+
+const trimNulls = (str: string): string =>
+  str.replace(/\u0000+$/g, '').trim();
+
 export interface BatteryDevice {
   manufacturer: string;
   model: string;
@@ -16,22 +21,63 @@ export interface BatteryDevice {
   availableEnergy: number;
   maxChargeContinuousPower: number;
   maxDischargeContinuousPower: number;
-  totalEnergyCharged: string; // Wh (string)
-  totalEnergyDischarged: string; // Wh (string)
+  totalEnergyCharged: string;
+  totalEnergyDischarged: string;
+}
+
+export interface EnergyMeterDevice {
+  manufacturer: string;
+  model: string;
+  serialNumber: string;
+  version: string;
+  options: string; // contains "Export+Import\u0000..."
+  powerAc: number;
+  powerAcL1: number;
+  powerAcL2: number;
+  powerAcL3: number;
+  voltageAcL1: number;
+  voltageAcL2: number;
+  voltageAcL3: number;
+  currentAcL1: number;
+  currentAcL2: number;
+  currentAcL3: number;
+  frequency: number;
+  powerApparentAcL1: number;
+  powerApparentAcL2: number;
+  powerApparentAcL3: number;
+  powerReactiveAcL1: number;
+  powerReactiveAcL2: number;
+  powerReactiveAcL3: number;
+  powerFactorL1: number;
+  powerFactorL2: number;
+  powerFactorL3: number;
+  totalExportAc: number; // Wh
+  totalImportAc: number; // Wh
 }
 
 export interface DevicesResponse {
   batteries?: {
     [groupId: string]: BatteryDevice[];
   };
-  // later: inverters, evChargers, etc
+  energyMeters?: {
+    [groupId: string]: EnergyMeterDevice[];
+  };
 }
 
 export interface BatteryDescriptor {
   gatewayUuid: string;
+  batteryId: string; // `${manufacturer} ${serialNumber}`
   groupId: string;
   index: number;
   battery: BatteryDevice;
+}
+
+export interface EnergyMeterDescriptor {
+  gatewayUuid: string;
+  meterId: string; // `${manufacturer} ${serialNumber}`
+  groupId: string;
+  index: number;
+  meter: EnergyMeterDevice;
 }
 
 export default class GridSenseApiClient {
@@ -58,10 +104,8 @@ export default class GridSenseApiClient {
     return this.requestJson<DevicesResponse>('/api/v1/devices');
   }
 
-  /**
-   * Helper to flatten all batteries for a given gateway.
-   * You pass in gatewayUuid just so you can keep it with the result.
-   */
+  // ---------- Batteries ----------
+
   async listBatteries(gatewayUuid: string): Promise<BatteryDescriptor[]> {
     const devices = await this.getDevices();
     const result: BatteryDescriptor[] = [];
@@ -69,8 +113,13 @@ export default class GridSenseApiClient {
     const batteries = devices.batteries ?? {};
     for (const [groupId, arr] of Object.entries(batteries)) {
       arr.forEach((battery, index) => {
+        const manufacturer = trimNulls(battery.manufacturer);
+        const serial = trimNulls(battery.serialNumber);
+        const batteryId = `${manufacturer} ${serial}`.trim();
+
         result.push({
           gatewayUuid,
+          batteryId,
           groupId,
           index,
           battery,
@@ -79,5 +128,75 @@ export default class GridSenseApiClient {
     }
 
     return result;
+  }
+
+  async getBatteryById(batteryId: string): Promise<BatteryDevice | null> {
+    const devices = await this.getDevices();
+    const batteries = devices.batteries ?? {};
+
+    for (const [, arr] of Object.entries(batteries)) {
+      for (const battery of arr) {
+        const manufacturer = trimNulls(battery.manufacturer);
+        const serial = trimNulls(battery.serialNumber);
+        const currentId = `${manufacturer} ${serial}`.trim();
+
+        if (currentId === batteryId) return battery;
+      }
+    }
+
+    return null;
+  }
+
+  // ---------- Energy Meters (Export+Import) ----------
+
+  async listImportExportMeters(
+    gatewayUuid: string,
+  ): Promise<EnergyMeterDescriptor[]> {
+    const devices = await this.getDevices();
+    const result: EnergyMeterDescriptor[] = [];
+
+    const meters = devices.energyMeters ?? {};
+    for (const [groupId, arr] of Object.entries(meters)) {
+      arr.forEach((meter, index) => {
+        const options = trimNulls(meter.options);
+        if (options !== 'Export+Import') return; // filter
+
+        const manufacturer = trimNulls(meter.manufacturer);
+        const serial = trimNulls(meter.serialNumber);
+        const meterId = `${manufacturer} ${serial}`.trim();
+
+        result.push({
+          gatewayUuid,
+          meterId,
+          groupId,
+          index,
+          meter,
+        });
+      });
+    }
+
+    return result;
+  }
+
+  async getImportExportMeterById(
+    meterId: string,
+  ): Promise<EnergyMeterDevice | null> {
+    const devices = await this.getDevices();
+    const meters = devices.energyMeters ?? {};
+
+    for (const [, arr] of Object.entries(meters)) {
+      for (const meter of arr) {
+        const manufacturer = trimNulls(meter.manufacturer);
+        const serial = trimNulls(meter.serialNumber);
+        const currentId = `${manufacturer} ${serial}`.trim();
+
+        const options = trimNulls(meter.options);
+        if (options !== 'Export+Import') continue;
+
+        if (currentId === meterId) return meter;
+      }
+    }
+
+    return null;
   }
 }

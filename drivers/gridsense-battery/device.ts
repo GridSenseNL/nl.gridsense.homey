@@ -1,14 +1,11 @@
-// src/drivers/gridsense-battery/device.ts
 import Homey from 'homey';
 import GridSenseApiClient, {
-  DevicesResponse,
   BatteryDevice,
 } from '../../gridsense/GridSenseApiClient';
 
 module.exports = class GridSenseBatteryDevice extends Homey.Device {
   private client!: GridSenseApiClient;
-  private deviceGroupId!: string;
-  private batteryIndex!: number;
+  private batteryId!: string;
   private pollInterval?: NodeJS.Timeout;
 
   async onInit(): Promise<void> {
@@ -16,8 +13,7 @@ module.exports = class GridSenseBatteryDevice extends Homey.Device {
 
     const ip = (this.getSetting('ipAddress') as string) || '';
     const port = (this.getSetting('port') as number) || 3000;
-    this.deviceGroupId = (this.getSetting('deviceGroupId') as string) || '';
-    this.batteryIndex = (this.getSetting('batteryIndex') as number) || 0;
+    this.batteryId = (this.getSetting('batteryId') as string) || '';
 
     this.client = new GridSenseApiClient(ip, port);
     this.startPolling();
@@ -25,38 +21,31 @@ module.exports = class GridSenseBatteryDevice extends Homey.Device {
 
   async onUninit(): Promise<void> {
     if (this.pollInterval) {
-      clearInterval(this.pollInterval);
+      this.homey.clearInterval(this.pollInterval);
     }
   }
 
   async onSettings({ newSettings }: {
-    newSettings: {
-        ipAddress?: string;
-        port?: number;
-        deviceGroupId?: string;
-        batteryIndex?: number;
-    }
+    newSettings: Record<string, unknown>;
   }): Promise<void> {
     this.log('Battery settings updated', newSettings);
 
     const ip = (newSettings.ipAddress as string) || '';
     const port = (newSettings.port as number) || 3000;
-    this.deviceGroupId =
-      (newSettings.deviceGroupId as string) || this.deviceGroupId;
-    this.batteryIndex =
-      (newSettings.batteryIndex as number) || this.batteryIndex;
+    this.batteryId = (newSettings.batteryId as string) || this.batteryId;
 
     this.client = new GridSenseApiClient(ip, port);
     this.startPolling();
   }
 
   private startPolling() {
-    if (this.pollInterval) clearInterval(this.pollInterval);
+    if (this.pollInterval) {
+      this.homey.clearInterval(this.pollInterval);
+    }
 
-    // first run immediately
     this.poll().catch((err) => this.error('Initial poll error', err));
 
-    this.pollInterval = setInterval(
+    this.pollInterval = this.homey.setInterval(
       () => {
         this.poll()
           .catch((err) => this.error('Poll error', err));
@@ -66,32 +55,24 @@ module.exports = class GridSenseBatteryDevice extends Homey.Device {
   }
 
   private async poll() {
-    if (!this.deviceGroupId) {
-      this.log('No deviceGroupId set for battery, skipping poll');
+    if (!this.batteryId) {
+      this.log('No batteryId set, skipping poll');
       return;
     }
 
-    const devices: DevicesResponse = await this.client.getDevices();
-    const group = devices.batteries?.[this.deviceGroupId];
+    const battery: BatteryDevice | null = await this.client.getBatteryById(this.batteryId);
 
-    if (!group || !group[this.batteryIndex]) {
-      this.log(
-        'Battery not found in devices response',
-        this.deviceGroupId,
-        this.batteryIndex,
-      );
+    if (!battery) {
+      this.log('Battery not found for id', this.batteryId);
       return;
     }
 
-    const b: BatteryDevice = group[this.batteryIndex];
+    // 1) Live power (W)
+    await this.setCapabilityValue('measure_power', battery.powerDc);
 
-    // 1) Live power (W) — Homey expects W for measure_power
-    await this.setCapabilityValue('measure_power', b.powerDc);
-
-    // 2) Lifetime energy — Homey expects kWh
-    // Assumption: totalEnergyCharged / Discharged are Wh → convert to kWh.
-    const chargedWh = parseFloat(b.totalEnergyCharged);
-    const dischargedWh = parseFloat(b.totalEnergyDischarged);
+    // 2) Lifetime energy (kWh)
+    const chargedWh = parseFloat(battery.totalEnergyCharged);
+    const dischargedWh = parseFloat(battery.totalEnergyDischarged);
 
     if (!Number.isNaN(chargedWh)) {
       await this.setCapabilityValue(
@@ -107,7 +88,7 @@ module.exports = class GridSenseBatteryDevice extends Homey.Device {
       );
     }
 
-    // Optional: you can later map b.soe (0..1) to a custom capability or measure_battery
-    // const soePct = Math.round(b.soe * 100);
+    // Optional: SoE → measure_battery
+    // const soePct = Math.round(battery.soe * 100);
   }
-}
+};
