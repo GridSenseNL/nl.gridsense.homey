@@ -1,0 +1,30 @@
+{
+  "id": "gridsense-inverter",
+  "name": {
+    "en": "GridSense Inverter"
+  },
+  "class": "solarpanel",
+  "platforms": ["local"],
+  "driver": "drivers/gridsense-inverter/driver.js",
+  "pair": [
+    {
+      "id": "list_devices",
+      "template": "list_devices",
+      "navigation": {
+        "next": "add_devices"
+      }
+    },
+    {
+      "id": "add_devices",
+      "template": "add_devices"
+    }
+  ],
+  "connectivity": ["lan"],
+  "capabilities": [
+    "measure_power",
+    "meter_power"
+  ],
+  "energy": {
+    "meterPowerExportedCapability": "meter_power"
+  }
+}

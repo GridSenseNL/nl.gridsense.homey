@@ -35,6 +35,13 @@
       "class": "other"
     },
     {
+      "id": "gridsense-inverter",
+      "name": {
+        "en": "GridSense Inverter"
+      },
+      "class": "solarpanel"
+    },
+    {
       "id": "gridsense-battery",
       "name": {
         "en": "GridSense Home Battery"

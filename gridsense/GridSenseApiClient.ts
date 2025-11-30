@@ -3,6 +3,37 @@
 const trimNulls = (str: string): string =>
   str.replace(/\u0000+$/g, '').trim();
 
+export interface InverterDevice {
+  manufacturer: string;
+  model: string;
+  serialNumber: string;
+  version: string;
+  status: number;
+  vendorStatus: number;
+  powerAc: number;
+  currentAcL1?: number;
+  currentAcL2?: number;
+  currentAcL3?: number;
+  voltageAcL1?: number;
+  voltageAcL2?: number;
+  voltageAcL3?: number;
+  voltageAcL1L2?: number;
+  frequency: number;
+  powerApparentAc: number;
+  powerReactiveAc: number;
+  powerFactorL1?: number;
+  powerFactorL2?: number;
+  powerFactorL3?: number;
+  powerDc: number;
+  powerDcPvTotal: number;
+  temperature: number;
+  maxChargePower?: number;
+  maxDischargePower?: number;
+  totalPvProduction: number; // Wh
+  totalEnergyInjected: number; // Wh
+  powerDcPvSE: number;
+}
+
 export interface BatteryDevice {
   manufacturer: string;
   model: string;
@@ -56,12 +87,22 @@ export interface EnergyMeterDevice {
 }
 
 export interface DevicesResponse {
+  inverters?: {
+    [groupId: string]: InverterDevice
+  };
   batteries?: {
     [groupId: string]: BatteryDevice[];
   };
   energyMeters?: {
     [groupId: string]: EnergyMeterDevice[];
   };
+}
+
+export interface InverterDescriptor {
+  gatewayUuid: string;
+  inverterId: string; // `${manufacturer} ${serialNumber}`
+  key: string; // de key in het inverters object (ec5a..., d818...)
+  inverter: InverterDevice;
 }
 
 export interface BatteryDescriptor {
@@ -102,6 +143,46 @@ export default class GridSenseApiClient {
 
   async getDevices(): Promise<DevicesResponse> {
     return this.requestJson<DevicesResponse>('/api/v1/devices');
+  }
+
+  // ---------- Inverters ----------
+
+  async listInverters(gatewayUuid: string): Promise<InverterDescriptor[]> {
+    const devices = await this.getDevices();
+    const result: InverterDescriptor[] = [];
+
+    const inverters = devices.inverters ?? {};
+    for (const [key, inv] of Object.entries(inverters)) {
+      const manufacturer = trimNulls(inv.manufacturer);
+      const serial = trimNulls(inv.serialNumber);
+      const inverterId = `${manufacturer} ${serial}`.trim();
+
+      result.push({
+        gatewayUuid,
+        inverterId,
+        key,
+        inverter: inv,
+      });
+    }
+
+    return result;
+  }
+
+  async getInverterById(inverterId: string): Promise<InverterDevice | null> {
+    const devices = await this.getDevices();
+    const inverters = devices.inverters ?? {};
+
+    for (const [, inv] of Object.entries(inverters)) {
+      const manufacturer = trimNulls(inv.manufacturer);
+      const serial = trimNulls(inv.serialNumber);
+      const currentId = `${manufacturer} ${serial}`.trim();
+
+      if (currentId === inverterId) {
+        return inv;
+      }
+    }
+
+    return null;
   }
 
   // ---------- Batteries ----------

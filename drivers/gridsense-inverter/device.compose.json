@@ -1,0 +1,49 @@
+{
+  "name": {
+    "en": "GridSense Inverter"
+  },
+  "class": "solarpanel",
+  "capabilities": [
+    "measure_power",
+    "meter_power"
+  ],
+  "settings": [
+    {
+      "id": "ipAddress",
+      "type": "text",
+      "label": {
+        "en": "Gateway IP address"
+      }
+    },
+    {
+      "id": "port",
+      "type": "number",
+      "label": {
+        "en": "Gateway port"
+      },
+      "value": 3000
+    },
+    {
+      "id": "gatewayUuid",
+      "type": "text",
+      "label": {
+        "en": "Gateway UUID"
+      }
+    },
+    {
+      "id": "inverterId",
+      "type": "text",
+      "label": {
+        "en": "Inverter identifier"
+      }
+    },
+    {
+      "id": "serialNumber",
+      "type": "text",
+      "label": {
+        "en": "Inverter serial number"
+      }
+    }
+  ],
+  "device": "drivers/gridsense-inverter/device.js"
+}
