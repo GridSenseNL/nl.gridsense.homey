@@ -1,7 +1,10 @@
 // src/gridsense/GridSenseApiClient.ts
 
-const trimNulls = (str: string): string =>
-  str.replace(/\u0000+$/g, '').trim();
+/**
+ * Strings from the gateway are fixed-width fields padded with NUL bytes.
+ */
+// eslint-disable-next-line no-control-regex
+export const trimNulls = (str: string): string => str.replace(/\u0000+$/g, '').trim();
 
 export interface InverterDevice {
   manufacturer: string;
