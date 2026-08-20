@@ -86,6 +86,48 @@ export interface EnergyMeterDevice {
   totalImportAc: number; // Wh
 }
 
+/**
+ * Mirrors `EVChargerData` in the gateway firmware (src/devices/ev-charger/BaseEVCharger.ts).
+ *
+ * Almost every field is optional: the gateway supports several charger brands over
+ * Modbus and each one exposes a different subset of registers.
+ *
+ * The energy counters are typed `number | string` on purpose. The gateway reads some
+ * of them as 64-bit values and serialises `bigint` via `BigInt.prototype.toJSON`,
+ * which turns them into strings on the wire.
+ */
+export interface EVChargerDevice {
+  manufacturer: string;
+  model?: string | null;
+  serialNumber: string;
+  version?: string | number | null;
+  portIdentifier?: string | null;
+
+  status?: number | null;
+  vendorStatus?: number | null;
+  vendorStatusString?: string | null;
+  vehicleConnected?: boolean | null;
+  lastWrittenCurrent?: number | null; // A
+
+  powerAc?: number | null; // W
+  powerAcL1?: number | null;
+  powerAcL2?: number | null;
+  powerAcL3?: number | null;
+  voltageAcL1?: number | null;
+  voltageAcL2?: number | null;
+  voltageAcL3?: number | null;
+  currentAcL1?: number | null;
+  currentAcL2?: number | null;
+  currentAcL3?: number | null;
+  frequency?: number | null;
+
+  temperature?: number | null;
+
+  totalEnergyCharged?: number | string | null; // Wh
+  dailyEnergyCharged?: number | string | null; // Wh
+  currentSessionEnergyCharged?: number | string | null; // Wh
+}
+
 export interface DevicesResponse {
   inverters?: {
     [groupId: string]: InverterDevice
@@ -95,6 +137,9 @@ export interface DevicesResponse {
   };
   energyMeters?: {
     [groupId: string]: EnergyMeterDevice[];
+  };
+  evChargers?: {
+    [key: string]: EVChargerDevice;
   };
 }
 
@@ -119,6 +164,13 @@ export interface EnergyMeterDescriptor {
   groupId: string;
   index: number;
   meter: EnergyMeterDevice;
+}
+
+export interface EVChargerDescriptor {
+  gatewayUuid: string;
+  evChargerId: string; // `${manufacturer} ${serialNumber}`
+  key: string; // de key in het evChargers object (de device uuid van de gateway)
+  evCharger: EVChargerDevice;
 }
 
 export default class GridSenseApiClient {
@@ -275,6 +327,46 @@ export default class GridSenseApiClient {
         if (options !== 'Export+Import') continue;
 
         if (currentId === meterId) return meter;
+      }
+    }
+
+    return null;
+  }
+
+  // ---------- EV Chargers ----------
+
+  async listEvChargers(gatewayUuid: string): Promise<EVChargerDescriptor[]> {
+    const devices = await this.getDevices();
+    const result: EVChargerDescriptor[] = [];
+
+    const evChargers = devices.evChargers ?? {};
+    for (const [key, evCharger] of Object.entries(evChargers)) {
+      const manufacturer = trimNulls(evCharger.manufacturer ?? '');
+      const serial = trimNulls(evCharger.serialNumber ?? '');
+      const evChargerId = `${manufacturer} ${serial}`.trim();
+
+      result.push({
+        gatewayUuid,
+        evChargerId,
+        key,
+        evCharger,
+      });
+    }
+
+    return result;
+  }
+
+  async getEvChargerById(evChargerId: string): Promise<EVChargerDevice | null> {
+    const devices = await this.getDevices();
+    const evChargers = devices.evChargers ?? {};
+
+    for (const [, evCharger] of Object.entries(evChargers)) {
+      const manufacturer = trimNulls(evCharger.manufacturer ?? '');
+      const serial = trimNulls(evCharger.serialNumber ?? '');
+      const currentId = `${manufacturer} ${serial}`.trim();
+
+      if (currentId === evChargerId) {
+        return evCharger;
       }
     }
 

@@ -1,7 +1,7 @@
 {
   "id": "nl.gridsense.homey",
   "version": "1.0.0",
-  "compatibility": ">=12.4.0",
+  "compatibility": ">=12.4.5",
   "sdk": 3,
   "platforms": [
     "local",
@@ -54,6 +54,13 @@
         "en": "GridSense Export+Import Meter"
       },
       "class": "sensor"
+    },
+    {
+      "id": "gridsense-evcharger",
+      "name": {
+        "en": "GridSense EV Charger"
+      },
+      "class": "evcharger"
     }
   ],
   "homepage": "https://gridsense.nl/"

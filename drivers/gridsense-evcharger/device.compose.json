@@ -1,0 +1,57 @@
+{
+  "name": {
+    "en": "GridSense EV Charger"
+  },
+  "class": "evcharger",
+  "capabilities": [
+    "evcharger_charging_state",
+    "measure_power",
+    "meter_power"
+  ],
+  "capabilitiesOptions": {
+    "meter_power.session": {
+      "title": {
+        "en": "Session energy"
+      }
+    }
+  },
+  "settings": [
+    {
+      "id": "ipAddress",
+      "type": "text",
+      "label": {
+        "en": "Gateway IP address"
+      }
+    },
+    {
+      "id": "port",
+      "type": "number",
+      "label": {
+        "en": "Gateway port"
+      },
+      "value": 3000
+    },
+    {
+      "id": "gatewayUuid",
+      "type": "text",
+      "label": {
+        "en": "Gateway UUID"
+      }
+    },
+    {
+      "id": "evChargerId",
+      "type": "text",
+      "label": {
+        "en": "EV charger identifier"
+      }
+    },
+    {
+      "id": "serialNumber",
+      "type": "text",
+      "label": {
+        "en": "EV charger serial number"
+      }
+    }
+  ],
+  "device": "drivers/gridsense-evcharger/device.js"
+}

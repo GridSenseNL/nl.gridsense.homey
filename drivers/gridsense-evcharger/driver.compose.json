@@ -1,0 +1,43 @@
+{
+  "id": "gridsense-evcharger",
+  "name": {
+    "en": "GridSense EV Charger"
+  },
+  "class": "evcharger",
+  "platforms": [
+    "local"
+  ],
+  "driver": "drivers/gridsense-evcharger/driver.js",
+  "pair": [
+    {
+      "id": "list_devices",
+      "template": "list_devices",
+      "navigation": {
+        "next": "add_devices"
+      }
+    },
+    {
+      "id": "add_devices",
+      "template": "add_devices"
+    }
+  ],
+  "connectivity": [
+    "lan"
+  ],
+  "capabilities": [
+    "evcharger_charging_state",
+    "measure_power",
+    "meter_power"
+  ],
+  "energy": {
+    "evCharger": true,
+    "meterPowerImportedCapability": "meter_power"
+  },
+  "capabilitiesOptions": {
+    "meter_power.session": {
+      "title": {
+        "en": "Session energy"
+      }
+    }
+  }
+}
