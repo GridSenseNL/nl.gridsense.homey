@@ -4,6 +4,11 @@
     "en": "GridSense Gateway"
   },
   "class": "other",
+  "images": {
+    "small": "/drivers/gridsense-gateway/assets/images/small.png",
+    "large": "/drivers/gridsense-gateway/assets/images/large.png",
+    "xlarge": "/drivers/gridsense-gateway/assets/images/xlarge.png"
+  },
   "driver": "drivers/gridsense-gateway/driver.js",
   "pair": [
     {

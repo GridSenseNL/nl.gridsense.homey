@@ -4,6 +4,11 @@
     "en": "GridSense Inverter"
   },
   "class": "solarpanel",
+  "images": {
+    "small": "/drivers/gridsense-inverter/assets/images/small.png",
+    "large": "/drivers/gridsense-inverter/assets/images/large.png",
+    "xlarge": "/drivers/gridsense-inverter/assets/images/xlarge.png"
+  },
   "platforms": ["local"],
   "driver": "drivers/gridsense-inverter/driver.js",
   "pair": [
