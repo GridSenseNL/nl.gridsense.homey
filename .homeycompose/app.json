@@ -16,6 +16,7 @@
   "category": [
     "energy"
   ],
+  "brandColor": "#0071E1",
   "permissions": [],
   "images": {
     "small": "/assets/images/small.png",
@@ -56,5 +57,6 @@
       "class": "sensor"
     }
   ],
-  "homepage": "https://gridsense.nl/"
+  "homepage": "https://gridsense.nl/",
+  "support": "https://gridsense.nl/"
 }

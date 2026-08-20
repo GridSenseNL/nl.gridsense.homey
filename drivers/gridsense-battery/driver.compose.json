@@ -4,6 +4,11 @@
     "en": "GridSense Home Battery"
   },
   "class": "battery",
+  "images": {
+    "small": "/drivers/gridsense-battery/assets/images/small.png",
+    "large": "/drivers/gridsense-battery/assets/images/large.png",
+    "xlarge": "/drivers/gridsense-battery/assets/images/xlarge.png"
+  },
   "platforms": ["local"],
   "driver": "drivers/gridsense-battery/driver.js",
   "pair": [

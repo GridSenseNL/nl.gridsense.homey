@@ -17,6 +17,7 @@
   "category": [
     "energy"
   ],
+  "brandColor": "#0071E1",
   "permissions": [],
   "images": {
     "small": "/assets/images/small.png",
@@ -28,6 +29,7 @@
     "email": "info@gridsense.nl"
   },
   "homepage": "https://gridsense.nl/",
+  "support": "https://gridsense.nl/",
   "drivers": [
     {
       "id": "gridsense-battery",
@@ -35,6 +37,11 @@
         "en": "GridSense Home Battery"
       },
       "class": "battery",
+      "images": {
+        "small": "/drivers/gridsense-battery/assets/images/small.png",
+        "large": "/drivers/gridsense-battery/assets/images/large.png",
+        "xlarge": "/drivers/gridsense-battery/assets/images/xlarge.png"
+      },
       "platforms": [
         "local"
       ],
@@ -72,6 +79,11 @@
         "en": "GridSense Gateway"
       },
       "class": "other",
+      "images": {
+        "small": "/drivers/gridsense-gateway/assets/images/small.png",
+        "large": "/drivers/gridsense-gateway/assets/images/large.png",
+        "xlarge": "/drivers/gridsense-gateway/assets/images/xlarge.png"
+      },
       "driver": "drivers/gridsense-gateway/driver.js",
       "pair": [
         {
@@ -104,6 +116,11 @@
         "en": "GridSense Export+Import Meter"
       },
       "class": "sensor",
+      "images": {
+        "small": "/drivers/gridsense-gridmeter/assets/images/small.png",
+        "large": "/drivers/gridsense-gridmeter/assets/images/large.png",
+        "xlarge": "/drivers/gridsense-gridmeter/assets/images/xlarge.png"
+      },
       "platforms": [
         "local"
       ],
@@ -141,6 +158,11 @@
         "en": "GridSense Inverter"
       },
       "class": "solarpanel",
+      "images": {
+        "small": "/drivers/gridsense-inverter/assets/images/small.png",
+        "large": "/drivers/gridsense-inverter/assets/images/large.png",
+        "xlarge": "/drivers/gridsense-inverter/assets/images/xlarge.png"
+      },
       "platforms": [
         "local"
       ],
