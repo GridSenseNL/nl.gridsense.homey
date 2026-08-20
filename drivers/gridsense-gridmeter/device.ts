@@ -21,7 +21,7 @@ module.exports = class GridSenseGridMeterDevice extends Homey.Device {
   }
 
   async onUninit(): Promise<void> {
-    if (this.pollInterval) clearInterval(this.pollInterval);
+    if (this.pollInterval) this.homey.clearInterval(this.pollInterval);
   }
 
   async onSettings({ newSettings }: {
@@ -31,19 +31,18 @@ module.exports = class GridSenseGridMeterDevice extends Homey.Device {
 
     const ip = (newSettings.ipAddress as string) || '';
     const port = (newSettings.port as number) || 3000;
-    this.meterId =
-      (newSettings.meterId as string) || this.meterId;
+    this.meterId = (newSettings.meterId as string) || this.meterId;
 
     this.client = new GridSenseApiClient(ip, port);
     this.startPolling();
   }
 
   private startPolling() {
-    if (this.pollInterval) clearInterval(this.pollInterval);
+    if (this.pollInterval) this.homey.clearInterval(this.pollInterval);
 
     this.poll().catch((err) => this.error('Initial poll error', err));
 
-    this.pollInterval = setInterval(
+    this.pollInterval = this.homey.setInterval(
       () => {
         this.poll()
           .catch((err) => this.error('Poll error', err));
@@ -58,8 +57,7 @@ module.exports = class GridSenseGridMeterDevice extends Homey.Device {
       return;
     }
 
-    const meter: EnergyMeterDevice | null =
-      await this.client.getImportExportMeterById(this.meterId);
+    const meter: EnergyMeterDevice | null = await this.client.getImportExportMeterById(this.meterId);
 
     if (!meter) {
       this.log('Energy meter not found for id', this.meterId);
