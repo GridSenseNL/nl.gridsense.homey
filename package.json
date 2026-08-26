@@ -16,6 +16,7 @@
     "typescript": "5.9.3"
   },
   "dependencies": {
+    "homey-log": "^2.1.2",
     "multicast-dns": "7.2.5"
   },
   "packageManager": "yarn@1.22.22"
