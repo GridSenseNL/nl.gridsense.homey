@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "homey": "^4.4.2"
+  },
+  "_npx": {
+    "packages": [
+      "homey"
+    ]
+  }
+}
