@@ -1,0 +1,54 @@
+# The Homey CLI compiles this app with `npx tsc` during `homey app validate`
+# and `homey app publish`, so type errors and lint regressions otherwise only
+# surface at release time. These jobs check them on every push instead.
+#
+# Node 24 matches what the Homey CLI itself requires.
+
+default:
+  image: node:24-alpine
+  before_script:
+    - npm ci --ignore-scripts --prefer-offline
+  cache:
+    key:
+      files:
+        - package-lock.json
+    paths:
+      - .npm/
+
+variables:
+  npm_config_cache: "$CI_PROJECT_DIR/.npm"
+
+stages:
+  - test
+
+lint:
+  stage: test
+  script:
+    - npm run lint
+
+typecheck:
+  stage: test
+  script:
+    - npm run typecheck
+
+build:
+  stage: test
+  script:
+    - npm run build
+  artifacts:
+    paths:
+      - .homeybuild/
+    expire_in: 1 week
+
+# Mirrors the Homey App Store validation that athombv/github-action-homey-app-validate
+# runs on GitHub (`npx homey app validate --level verified`). This is the check
+# that gates publishing, so it is the one that matters most.
+#
+# The upstream action does not install dependencies, which is why it could never
+# compile this app: the Homey CLI shells out to `npx tsc`, which needs both
+# `typescript` and the `@tsconfig/node16` base config that tsconfig.json extends.
+# The shared before_script installs them first.
+validate:
+  stage: test
+  script:
+    - npx --yes homey app validate --level verified
