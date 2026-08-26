@@ -185,13 +185,27 @@
       ],
       "capabilities": [
         "measure_power",
-        "meter_power"
+        "meter_power",
+        "energy_handling_mode"
       ],
       "energy": {
         "meterPowerExportedCapability": "meter_power"
       }
     }
   ],
+  "capabilities": {
+    "energy_handling_mode": {
+      "type": "string",
+      "title": {
+        "en": "Energy handling mode",
+        "nl": "Energiebeheermodus"
+      },
+      "uiComponent": "sensor",
+      "getable": true,
+      "setable": false,
+      "insights": false
+    }
+  },
   "discovery": {
     "gridsense-gateway": {
       "type": "mdns-sd",

@@ -16,6 +16,10 @@ module.exports = class GridSenseInverterDevice extends Homey.Device {
     const port = (this.getSetting('port') as number) || 3000;
     this.inverterId = (this.getSetting('inverterId') as string) || '';
 
+    if (!this.hasCapability('energy_handling_mode')) {
+      await this.addCapability('energy_handling_mode');
+    }
+
     this.client = new GridSenseApiClient(ip, port);
     this.startPolling();
   }
@@ -70,6 +74,12 @@ module.exports = class GridSenseInverterDevice extends Homey.Device {
     // totalEnergyInjected is Wh → kWh
     const injectedKwh = inv.totalPvProduction / 1000;
     await this.setCapabilityValue('meter_power', injectedKwh);
+
+    // Passed through as-is so newly added modes don't require an app update.
+    await this.setCapabilityValue(
+      'energy_handling_mode',
+      typeof inv.energyHandlingMode === 'string' ? inv.energyHandlingMode : null,
+    );
 
     // Later kun je temperatuur / status ook mappen naar extra capabilities
     // bv: measure_temperature, measure_voltage, etc.

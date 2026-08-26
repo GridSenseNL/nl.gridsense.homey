@@ -32,6 +32,7 @@ export interface InverterDevice {
   totalPvProduction: number; // Wh
   totalEnergyInjected: number; // Wh
   powerDcPvSE: number;
+  energyHandlingMode?: string; // free-form identifier, new values can appear at any time
 }
 
 export interface BatteryDevice {

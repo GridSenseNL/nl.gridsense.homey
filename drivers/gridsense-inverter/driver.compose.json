@@ -27,7 +27,8 @@
   "connectivity": ["lan"],
   "capabilities": [
     "measure_power",
-    "meter_power"
+    "meter_power",
+    "energy_handling_mode"
   ],
   "energy": {
     "meterPowerExportedCapability": "meter_power"

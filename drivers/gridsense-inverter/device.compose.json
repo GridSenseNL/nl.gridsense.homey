@@ -5,7 +5,8 @@
   "class": "solarpanel",
   "capabilities": [
     "measure_power",
-    "meter_power"
+    "meter_power",
+    "energy_handling_mode"
   ],
   "settings": [
     {
