@@ -25,7 +25,7 @@ module.exports = class GridSenseInverterDevice extends Homey.Device {
   }
 
   async onUninit(): Promise<void> {
-    if (this.pollInterval) clearInterval(this.pollInterval);
+    if (this.pollInterval) this.homey.clearInterval(this.pollInterval);
   }
 
   async onSettings({ newSettings }: {
@@ -35,20 +35,21 @@ module.exports = class GridSenseInverterDevice extends Homey.Device {
 
     const ip = (newSettings.ipAddress as string) || '';
     const port = (newSettings.port as number) || 3000;
-    this.inverterId =
-      (newSettings.inverterId as string) || this.inverterId;
+    this.inverterId = (newSettings.inverterId as string) || this.inverterId;
 
     this.client = new GridSenseApiClient(ip, port);
     this.startPolling();
   }
 
   private startPolling() {
-    if (this.pollInterval) clearInterval(this.pollInterval);
+    if (this.pollInterval) this.homey.clearInterval(this.pollInterval);
 
     this.poll().catch((err) => this.error('Initial poll error', err));
 
-    this.pollInterval = setInterval(
-      () => this.poll().catch((err) => this.error('Poll error', err)),
+    this.pollInterval = this.homey.setInterval(
+      () => {
+        this.poll().catch((err) => this.error('Poll error', err));
+      },
       30_000,
     );
   }

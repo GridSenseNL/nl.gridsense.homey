@@ -12,13 +12,13 @@ module.exports = class GridSenseGatewayDriver extends Homey.Driver {
     this.homey.log('Discovery results', JSON.stringify(discoveryResults, null, 2));
 
     // discoveryResults is an object: { [id]: DiscoveryResultMDNSSD }
-    const devices = Object.values(discoveryResults).map(
-      (res: any) => {
+    const devices = (Object.values(discoveryResults) as Homey.DiscoveryResultMDNSSD[]).map(
+      (res) => {
         // res.address: IP address
         // res.port: port (3000)
         // res.txt: TXT values, lowercased: { uuid, description, ... }
 
-        const uuid = res.txt?.uuid as string | undefined;
+        const { uuid } = res.txt as { uuid?: string };
         const name = `GridSense Gateway (${uuid?.slice(0, 8)})`;
 
         return {
