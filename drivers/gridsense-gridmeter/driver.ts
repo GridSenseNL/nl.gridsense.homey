@@ -2,10 +2,8 @@ import Homey from 'homey';
 
 import GridSenseApiClient, {
   EnergyMeterDescriptor,
+  trimNulls,
 } from '../../gridsense/GridSenseApiClient';
-
-const trimNulls = (str: string): string =>
-  str.replace(/\u0000+$/g, '').trim();
 
 module.exports = class GridSenseGridMeterDriver extends Homey.Driver {
   async onInit(): Promise<void> {
@@ -21,8 +19,7 @@ module.exports = class GridSenseGridMeterDriver extends Homey.Driver {
     for (const gw of gatewayDevices) {
       const ip = (gw.getSetting('ipAddress') as string) || '';
       const port = (gw.getSetting('port') as number) || 3000;
-      const gatewayUuid =
-        (gw.getSetting('uuid') as string) || (gw.getData() as any).id;
+      const gatewayUuid = (gw.getSetting('uuid') as string) || (gw.getData() as { id?: string }).id || '';
 
       if (!ip) {
         this.homey.log(
@@ -53,10 +50,8 @@ module.exports = class GridSenseGridMeterDriver extends Homey.Driver {
         const model = trimNulls(m.model);
         const serial = trimNulls(m.serialNumber);
 
-        const baseName =
-          `${manufacturer} ${model}`.trim() || 'GridSense Export+Import Meter';
-        const name =
-          `${baseName} (${serial || ip})`.replace(/\s+/g, ' ').trim();
+        const baseName = `${manufacturer} ${model}`.trim() || 'GridSense Export+Import Meter';
+        const name = `${baseName} (${serial || ip})`.replace(/\s+/g, ' ').trim();
 
         const id = desc.meterId;
 
@@ -79,4 +74,4 @@ module.exports = class GridSenseGridMeterDriver extends Homey.Driver {
     this.homey.log('Grid meters found for pairing:', devices);
     return devices;
   }
-}
+};

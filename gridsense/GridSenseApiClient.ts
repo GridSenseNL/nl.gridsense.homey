@@ -1,7 +1,10 @@
 // src/gridsense/GridSenseApiClient.ts
 
-const trimNulls = (str: string): string =>
-  str.replace(/\u0000+$/g, '').trim();
+/**
+ * Strings from the gateway are fixed-width fields padded with NUL bytes.
+ */
+// eslint-disable-next-line no-control-regex
+export const trimNulls = (str: string): string => str.replace(/\u0000+$/g, '').trim();
 
 export interface InverterDevice {
   manufacturer: string;
@@ -32,6 +35,7 @@ export interface InverterDevice {
   totalPvProduction: number; // Wh
   totalEnergyInjected: number; // Wh
   powerDcPvSE: number;
+  energyHandlingMode?: string; // free-form identifier, new values can appear at any time
 }
 
 export interface BatteryDevice {
@@ -341,8 +345,8 @@ export default class GridSenseApiClient {
 
     const evChargers = devices.evChargers ?? {};
     for (const [key, evCharger] of Object.entries(evChargers)) {
-      const manufacturer = trimNulls(evCharger.manufacturer ?? '');
-      const serial = trimNulls(evCharger.serialNumber ?? '');
+      const manufacturer = trimNulls(evCharger.manufacturer);
+      const serial = trimNulls(evCharger.serialNumber);
       const evChargerId = `${manufacturer} ${serial}`.trim();
 
       result.push({
@@ -361,8 +365,8 @@ export default class GridSenseApiClient {
     const evChargers = devices.evChargers ?? {};
 
     for (const [, evCharger] of Object.entries(evChargers)) {
-      const manufacturer = trimNulls(evCharger.manufacturer ?? '');
-      const serial = trimNulls(evCharger.serialNumber ?? '');
+      const manufacturer = trimNulls(evCharger.manufacturer);
+      const serial = trimNulls(evCharger.serialNumber);
       const currentId = `${manufacturer} ${serial}`.trim();
 
       if (currentId === evChargerId) {

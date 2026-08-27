@@ -4,6 +4,11 @@
     "en": "GridSense EV Charger"
   },
   "class": "evcharger",
+  "images": {
+    "small": "/drivers/gridsense-evcharger/assets/images/small.png",
+    "large": "/drivers/gridsense-evcharger/assets/images/large.png",
+    "xlarge": "/drivers/gridsense-evcharger/assets/images/xlarge.png"
+  },
   "platforms": [
     "local"
   ],

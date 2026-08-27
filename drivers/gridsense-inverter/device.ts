@@ -16,12 +16,16 @@ module.exports = class GridSenseInverterDevice extends Homey.Device {
     const port = (this.getSetting('port') as number) || 3000;
     this.inverterId = (this.getSetting('inverterId') as string) || '';
 
+    if (!this.hasCapability('energy_handling_mode')) {
+      await this.addCapability('energy_handling_mode');
+    }
+
     this.client = new GridSenseApiClient(ip, port);
     this.startPolling();
   }
 
   async onUninit(): Promise<void> {
-    if (this.pollInterval) clearInterval(this.pollInterval);
+    if (this.pollInterval) this.homey.clearInterval(this.pollInterval);
   }
 
   async onSettings({ newSettings }: {
@@ -31,20 +35,21 @@ module.exports = class GridSenseInverterDevice extends Homey.Device {
 
     const ip = (newSettings.ipAddress as string) || '';
     const port = (newSettings.port as number) || 3000;
-    this.inverterId =
-      (newSettings.inverterId as string) || this.inverterId;
+    this.inverterId = (newSettings.inverterId as string) || this.inverterId;
 
     this.client = new GridSenseApiClient(ip, port);
     this.startPolling();
   }
 
   private startPolling() {
-    if (this.pollInterval) clearInterval(this.pollInterval);
+    if (this.pollInterval) this.homey.clearInterval(this.pollInterval);
 
     this.poll().catch((err) => this.error('Initial poll error', err));
 
-    this.pollInterval = setInterval(
-      () => this.poll().catch((err) => this.error('Poll error', err)),
+    this.pollInterval = this.homey.setInterval(
+      () => {
+        this.poll().catch((err) => this.error('Poll error', err));
+      },
       30_000,
     );
   }
@@ -70,6 +75,12 @@ module.exports = class GridSenseInverterDevice extends Homey.Device {
     // totalEnergyInjected is Wh → kWh
     const injectedKwh = inv.totalPvProduction / 1000;
     await this.setCapabilityValue('meter_power', injectedKwh);
+
+    // Passed through as-is so newly added modes don't require an app update.
+    await this.setCapabilityValue(
+      'energy_handling_mode',
+      typeof inv.energyHandlingMode === 'string' ? inv.energyHandlingMode : null,
+    );
 
     // Later kun je temperatuur / status ook mappen naar extra capabilities
     // bv: measure_temperature, measure_voltage, etc.

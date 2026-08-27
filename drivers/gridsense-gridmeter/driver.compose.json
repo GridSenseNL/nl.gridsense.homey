@@ -4,6 +4,11 @@
     "en": "GridSense Export+Import Meter"
   },
   "class": "sensor",
+  "images": {
+    "small": "/drivers/gridsense-gridmeter/assets/images/small.png",
+    "large": "/drivers/gridsense-gridmeter/assets/images/large.png",
+    "xlarge": "/drivers/gridsense-gridmeter/assets/images/xlarge.png"
+  },
   "platforms": ["local"],
   "driver": "drivers/gridsense-gridmeter/driver.js",
   "pair": [

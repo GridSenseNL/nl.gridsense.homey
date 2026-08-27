@@ -1,11 +1,8 @@
 import Homey from 'homey';
 import GridSenseApiClient, {
   BatteryDescriptor,
+  trimNulls,
 } from '../../gridsense/GridSenseApiClient';
-
-function trimNulls(str: string): string {
-  return str.replace(/\u0000+$/g, '').trim();
-}
 
 module.exports = class GridSenseBatteryDriver extends Homey.Driver {
   async onInit(): Promise<void> {
@@ -21,7 +18,7 @@ module.exports = class GridSenseBatteryDriver extends Homey.Driver {
     for (const gw of gatewayDevices) {
       const ip = (gw.getSetting('ipAddress') as string) || '';
       const port = (gw.getSetting('port') as number) || 3000;
-      const gatewayUuid = (gw.getSetting('uuid') as string) || (gw.getData() as any).id;
+      const gatewayUuid = (gw.getSetting('uuid') as string) || (gw.getData() as { id?: string }).id || '';
 
       if (!ip) {
         this.homey.log(
@@ -52,11 +49,9 @@ module.exports = class GridSenseBatteryDriver extends Homey.Driver {
         const model = trimNulls(b.model);
         const serial = trimNulls(b.serialNumber);
 
-        const defaultName =
-          `${manufacturer} ${model}`.trim() || 'GridSense Battery';
+        const defaultName = `${manufacturer} ${model}`.trim() || 'GridSense Battery';
 
-        const name =
-          `${defaultName} (${serial || ip})`.replace(/\s+/g, ' ').trim();
+        const name = `${defaultName} (${serial || ip})`.replace(/\s+/g, ' ').trim();
 
         // stable identity:
         const id = desc.batteryId;
@@ -80,4 +75,4 @@ module.exports = class GridSenseBatteryDriver extends Homey.Driver {
     this.homey.log('Battery devices found for pairing:', devices);
     return devices;
   }
-}
+};

@@ -1,0 +1,172 @@
+# The Homey CLI compiles this app with `npx tsc` during `homey app validate`
+# and `homey app publish`, so type errors and lint regressions otherwise only
+# surface at release time. These jobs check them on every push instead.
+#
+# Node 24 matches what the Homey CLI itself requires.
+
+default:
+  image: node:24-alpine
+  before_script:
+    - npm ci --ignore-scripts --prefer-offline
+  cache:
+    key:
+      files:
+        - package-lock.json
+    paths:
+      - .npm/
+
+variables:
+  npm_config_cache: "$CI_PROJECT_DIR/.npm"
+
+stages:
+  - test
+  - release
+
+lint:
+  stage: test
+  script:
+    - npm run lint
+
+typecheck:
+  stage: test
+  script:
+    - npm run typecheck
+
+build:
+  stage: test
+  script:
+    - npm run build
+  artifacts:
+    paths:
+      - .homeybuild/
+    expire_in: 1 week
+
+# Mirrors the Homey App Store validation that athombv/github-action-homey-app-validate
+# runs on GitHub (`npx homey app validate --level verified`). This is the check
+# that gates publishing, so it is the one that matters most.
+#
+# The upstream action does not install dependencies, which is why it could never
+# compile this app: the Homey CLI shells out to `npx tsc`, which needs both
+# `typescript` and the `@tsconfig/node16` base config that tsconfig.json extends.
+# The shared before_script installs them first.
+validate:
+  stage: test
+  script:
+    - npx --yes homey app validate --level verified
+
+# ---------------------------------------------------------------------------
+# Release
+#
+# These replicate .github/workflows/homey-app-version.yml and
+# .github/workflows/homey-app-publish.yml. Both GitHub workflows are
+# workflow_dispatch only; the GitLab equivalent is a manual job on the default
+# branch, run from CI/CD > Pipelines > Run pipeline.
+#
+# Required CI/CD variables (Settings > CI/CD > Variables):
+#
+#   HOMEY_PAT      Personal Access Token from https://tools.developer.homey.app/me
+#                  Mark as masked and protected. Used by `publish`.
+#
+#   RELEASE_TOKEN  Project access token with the `write_repository` and `api`
+#                  scopes, and at least the Maintainer role so it can push to a
+#                  protected default branch. Mark as masked and protected.
+#                  Used by `version` to push the bump commit, tag and release.
+# ---------------------------------------------------------------------------
+
+.release:
+  stage: release
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+      when: manual
+  cache: []
+
+# Mirrors homey-app-version.yml: bumps the version, writes the changelog entry,
+# then commits, tags and creates a release.
+#
+# GitHub takes `version` and `changelog` as workflow_dispatch inputs. Here they
+# are pipeline variables: BUMP (major|minor|patch) and CHANGELOG.
+version:
+  extends: .release
+  variables:
+    BUMP: patch
+    CHANGELOG: ""
+    # A full clone, so the bump commit can be pushed back to the default branch.
+    GIT_DEPTH: "0"
+  before_script:
+    # `homey app version` only rewrites app.json, .homeycompose/app.json and
+    # .homeychangelog.json, so it needs no dependencies -- but the job image
+    # has no git.
+    - apk add --no-cache git
+  script:
+    - |
+      if [ -z "$CHANGELOG" ]; then
+        echo "CHANGELOG must be set when running this pipeline." >&2
+        exit 1
+      fi
+      if [ -z "$RELEASE_TOKEN" ]; then
+        echo "RELEASE_TOKEN is not set. See the comment in .gitlab-ci.yml." >&2
+        exit 1
+      fi
+      case "$BUMP" in
+        major|minor|patch) ;;
+        *) echo "BUMP must be one of: major, minor, patch (got '$BUMP')." >&2; exit 1 ;;
+      esac
+    - npx --yes homey app version "$BUMP" --changelog "$CHANGELOG"
+    - APP_VERSION=$(node -p "require('./app.json').version")
+    - echo "Bumped to v$APP_VERSION"
+    - git config user.name "GitLab CI"
+    - git config user.email "ci@gridsense.nl"
+    # Keep the token out of the remote URL so it cannot end up in the job log.
+    - git remote set-url origin "https://${CI_SERVER_HOST}/${CI_PROJECT_PATH}.git"
+    - git config credential.helper '!f() { echo username=oauth2; echo "password=$RELEASE_TOKEN"; }; f'
+    - git add -A
+    - git commit -m "Update Homey App Version to v$APP_VERSION"
+    # Annotated, so --follow-tags below actually pushes it.
+    - git tag -a "v$APP_VERSION" -m "v$APP_VERSION"
+    # ci.skip: the bump commit does not need to re-run the test stage.
+    - git push -o ci.skip origin "HEAD:${CI_DEFAULT_BRANCH}" --follow-tags
+    - |
+      node -e '
+        const version = require("./app.json").version;
+        const body = {
+          tag_name: `v${version}`,
+          name: `v${version}`,
+          description: process.env.CHANGELOG,
+        };
+        fetch(`${process.env.CI_API_V4_URL}/projects/${process.env.CI_PROJECT_ID}/releases`, {
+          method: "POST",
+          headers: {
+            "PRIVATE-TOKEN": process.env.RELEASE_TOKEN,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(body),
+        }).then(async (res) => {
+          if (!res.ok) {
+            console.error(`Creating release failed: ${res.status} ${await res.text()}`);
+            process.exit(1);
+          }
+          console.log(`Created release v${version}`);
+        });
+      '
+
+# Mirrors homey-app-publish.yml. The upstream action runs
+# `npm ci --ignore-scripts` and then `HOMEY_HEADLESS=1 npx homey app publish`;
+# the shared before_script already handles the install.
+publish:
+  extends: .release
+  cache:
+    key:
+      files:
+        - package-lock.json
+    paths:
+      - .npm/
+  script:
+    - |
+      if [ -z "$HOMEY_PAT" ]; then
+        echo "HOMEY_PAT is not set. See the comment in .gitlab-ci.yml." >&2
+        exit 1
+      fi
+    - HOMEY_HEADLESS=1 npx --yes homey app publish
+    - |
+      APP_ID=$(node -p "require('./app.json').id")
+      echo "Manage your app at https://tools.developer.homey.app/apps/app/$APP_ID"

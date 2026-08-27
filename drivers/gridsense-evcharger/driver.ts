@@ -2,9 +2,8 @@ import Homey from 'homey';
 
 import GridSenseApiClient, {
   EVChargerDescriptor,
+  trimNulls,
 } from '../../gridsense/GridSenseApiClient';
-
-const trimNulls = (str: string): string => str.replace(/\u0000+$/g, '').trim();
 
 module.exports = class GridSenseEvChargerDriver extends Homey.Driver {
   async onInit(): Promise<void> {
@@ -20,7 +19,7 @@ module.exports = class GridSenseEvChargerDriver extends Homey.Driver {
     for (const gw of gatewayDevices) {
       const ip = (gw.getSetting('ipAddress') as string) || '';
       const port = (gw.getSetting('port') as number) || 3000;
-      const gatewayUuid = (gw.getSetting('uuid') as string) || (gw.getData() as any).id;
+      const gatewayUuid = (gw.getSetting('uuid') as string) || (gw.getData() as { id?: string }).id || '';
 
       if (!ip) {
         this.homey.log(
@@ -47,9 +46,9 @@ module.exports = class GridSenseEvChargerDriver extends Homey.Driver {
       for (const desc of evChargers) {
         const charger = desc.evCharger;
 
-        const manufacturer = trimNulls(charger.manufacturer ?? '');
+        const manufacturer = trimNulls(charger.manufacturer);
         const model = trimNulls(charger.model ?? '');
-        const serial = trimNulls(charger.serialNumber ?? '');
+        const serial = trimNulls(charger.serialNumber);
 
         const baseName = `${manufacturer} ${model}`.trim() || 'GridSense EV Charger';
         const name = `${baseName} (${serial || ip})`.replace(/\s+/g, ' ').trim();

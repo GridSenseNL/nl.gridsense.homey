@@ -2,9 +2,8 @@ import Homey from 'homey';
 
 import GridSenseApiClient, {
   InverterDescriptor,
+  trimNulls,
 } from '../../gridsense/GridSenseApiClient';
-
-const trimNulls = (str: string): string => str.replace(/\u0000+$/g, '').trim();
 
 module.exports = class GridSenseInverterDriver extends Homey.Driver {
   async onInit(): Promise<void> {
@@ -20,7 +19,7 @@ module.exports = class GridSenseInverterDriver extends Homey.Driver {
     for (const gw of gatewayDevices) {
       const ip = (gw.getSetting('ipAddress') as string) || '';
       const port = (gw.getSetting('port') as number) || 3000;
-      const gatewayUuid = (gw.getSetting('uuid') as string) || (gw.getData() as any).id;
+      const gatewayUuid = (gw.getSetting('uuid') as string) || (gw.getData() as { id?: string }).id || '';
 
       if (!ip) {
         this.homey.log(
