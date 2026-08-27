@@ -1210,7 +1210,7 @@ hasown@^2.0.2:
   dependencies:
     function-bind "^1.1.2"
 
-homey-log@^2.1.2:
+homey-log@2.1.2:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/homey-log/-/homey-log-2.1.2.tgz#d831bfa8d8af6c65e91514dc79103125c399add9"
   integrity sha512-IjdurtkVOHJzenMM60e27UiKTkEloiQOjwtEWFOcvQT+KIJ9bzN24CsyACXd4dZdmfni0A+jGbdwfA1TcoKhhQ==
