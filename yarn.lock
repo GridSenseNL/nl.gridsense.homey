@@ -96,10 +96,10 @@
   resolved "https://registry.npmjs.org/@rtsao/scc/-/scc-1.1.0.tgz"
   integrity sha512-zt6OdqaDoOnJ1ZYsCYGt9YmWzDXl4vQdKTyJev62gFhRGKdx7mcT54V9KIjg+d2wi9EXsPvAPKe7i7WjfVWB8g==
 
-"@tsconfig/node16@16.1.8":
-  version "16.1.8"
-  resolved "https://registry.npmjs.org/@tsconfig/node16/-/node16-16.1.8.tgz"
-  integrity sha512-T/CfdwFry660WjZor56z0F3pxeCllt8KOxWcHFW6ZEuULKUObTDEMdgtctyuJPxwqyWDsvHRfxHaJ4FIICyoqQ==
+"@tsconfig/node18@18.2.0":
+  version "18.2.0"
+  resolved "https://registry.npmjs.org/@tsconfig/node18/-/node18-18.2.0.tgz"
+  integrity sha512-yhxwIlFVSVcMym3O31HoMnRXpoenmpIxcj4Yoes2DUpe+xCJnA7ECQP1Vw889V0jTt/2nzvpLQ/UuMYCd3JPIg==
 
 "@types/dns-packet@*":
   version "5.6.5"
@@ -464,7 +464,7 @@ chalk@^4.0.0:
 
 charenc@0.0.2:
   version "0.0.2"
-  resolved "https://registry.yarnpkg.com/charenc/-/charenc-0.0.2.tgz#c0a1d2f3a7092e03774bfa83f14c0fc5790a8667"
+  resolved "https://registry.npmjs.org/charenc/-/charenc-0.0.2.tgz"
   integrity sha512-yrLQ/yVUFXkzg7EDQsPieE/53+0RlaWTs+wBrvW36cyilJ2SaDWfl4Yj7MtLTXleV9uEKefbAGUPv2/iWSooRA==
 
 color-convert@^1.9.0:
@@ -503,7 +503,7 @@ confusing-browser-globals@^1.0.10:
 
 cookie@0.3.1:
   version "0.3.1"
-  resolved "https://registry.yarnpkg.com/cookie/-/cookie-0.3.1.tgz#e7e0a1f9ef43b4c8ba925c5c5a96e806d16873bb"
+  resolved "https://registry.npmjs.org/cookie/-/cookie-0.3.1.tgz"
   integrity sha512-+IJOX0OqlHCszo2mBUq+SrEbCj6w7Kpffqx60zYbPTFaO4+yYgRjHwcZNpWvaTylDHaV7PPmBHzSecZiMhtPgw==
 
 cross-spawn@^7.0.2:
@@ -517,7 +517,7 @@ cross-spawn@^7.0.2:
 
 crypt@0.0.2:
   version "0.0.2"
-  resolved "https://registry.yarnpkg.com/crypt/-/crypt-0.0.2.tgz#88d7ff7ec0dfb86f713dc87bbb42d044d3e6c41b"
+  resolved "https://registry.npmjs.org/crypt/-/crypt-0.0.2.tgz"
   integrity sha512-mCxBlsHFYh9C+HVpiEacem8FEBnMXgU9gy4zmNC+SXAZNB/1idgp/aulFJ4FgCi7GPEVbfyng092GqL2k2rmow==
 
 data-view-buffer@^1.0.2:
@@ -1212,7 +1212,7 @@ hasown@^2.0.2:
 
 homey-log@2.1.2:
   version "2.1.2"
-  resolved "https://registry.yarnpkg.com/homey-log/-/homey-log-2.1.2.tgz#d831bfa8d8af6c65e91514dc79103125c399add9"
+  resolved "https://registry.npmjs.org/homey-log/-/homey-log-2.1.2.tgz"
   integrity sha512-IjdurtkVOHJzenMM60e27UiKTkEloiQOjwtEWFOcvQT+KIJ9bzN24CsyACXd4dZdmfni0A+jGbdwfA1TcoKhhQ==
   dependencies:
     raven "github:athombv/raven-node"
@@ -1299,7 +1299,7 @@ is-boolean-object@^1.2.1:
 
 is-buffer@~1.1.6:
   version "1.1.6"
-  resolved "https://registry.yarnpkg.com/is-buffer/-/is-buffer-1.1.6.tgz#efaa2ea9daa0d7ab2ea13a97b2b8ad51fefbe8be"
+  resolved "https://registry.npmjs.org/is-buffer/-/is-buffer-1.1.6.tgz"
   integrity sha512-NcdALwpXkTm5Zvvbk7owOUSvVvBKDgKP5/ewfXEznmQFfs4ZRmanOeKBTjRVjka3QFoN6XJ+9F3USqfHqTaU5w==
 
 is-callable@^1.2.7:
@@ -1537,7 +1537,7 @@ math-intrinsics@^1.1.0:
 
 md5@^2.2.1:
   version "2.3.0"
-  resolved "https://registry.yarnpkg.com/md5/-/md5-2.3.0.tgz#c3da9a6aae3a30b46b7b0c349b87b110dc3bda4f"
+  resolved "https://registry.npmjs.org/md5/-/md5-2.3.0.tgz"
   integrity sha512-T1GITYmFaKuO91vxyoQMFETst+O71VUPEU3ze5GNzDm0OWdP8v1ziTaAEPUr/3kLsY3Sftgz242A1SetQiDL7g==
   dependencies:
     charenc "0.0.2"
@@ -1752,7 +1752,7 @@ ramda@^0.27.0:
 
 "raven@github:athombv/raven-node":
   version "2.6.2"
-  resolved "https://codeload.github.com/athombv/raven-node/tar.gz/b8b2b6e007924a79ba4434240f6dfcf431d7c9a1"
+  resolved "git+ssh://git@github.com/athombv/raven-node.git#b8b2b6e007924a79ba4434240f6dfcf431d7c9a1"
   dependencies:
     cookie "0.3.1"
     md5 "^2.2.1"
@@ -1971,7 +1971,7 @@ sprintf-js@~1.0.2:
 
 stack-trace@0.0.10:
   version "0.0.10"
-  resolved "https://registry.yarnpkg.com/stack-trace/-/stack-trace-0.0.10.tgz#547c70b347e8d32b4e108ea1a2a159e5fdde19c0"
+  resolved "https://registry.npmjs.org/stack-trace/-/stack-trace-0.0.10.tgz"
   integrity sha512-KGzahc7puUKkzyMt+IqAep+TVNbKP+k2Lmwhub39m1AsTSkaDutx56aDCo+HLDzf/D26BIHTJWNiTG1KAJiQCg==
 
 stop-iteration-iterator@^1.1.0:
@@ -2082,7 +2082,7 @@ thunky@^1.0.2:
 
 timed-out@5.0.0:
   version "5.0.0"
-  resolved "https://registry.yarnpkg.com/timed-out/-/timed-out-5.0.0.tgz#e49575f0ec50575913d9b535e5f2490510d1bc7c"
+  resolved "https://registry.npmjs.org/timed-out/-/timed-out-5.0.0.tgz"
   integrity sha512-+IAmaDqYnVi/HOMCeH4NDzdjTH9EHTC8xbe+PgXMKtovdMjbu25qYxeUj6u/yukMp1wDOhPeh6oTcIVepm5n7Q==
 
 to-regex-range@^5.0.1:
@@ -2198,7 +2198,7 @@ uri-js@^4.2.2:
 
 uuid@3.0.0:
   version "3.0.0"
-  resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.0.0.tgz#6728fc0459c450d796a99c31837569bdf672d728"
+  resolved "https://registry.npmjs.org/uuid/-/uuid-3.0.0.tgz"
   integrity sha512-rqE1LoOVLv3QrZMjb4NkF5UWlkurCfPyItVnFPNKDDGkHw4dQUdE4zMcLqx28+0Kcf3+bnUk4PisaiRJT4aiaQ==
 
 v8-compile-cache@^2.0.3:
