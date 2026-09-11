@@ -1,0 +1,21 @@
+{
+  "triggers": [
+    {
+      "id": "energy_handling_mode_changed",
+      "title": {
+        "en": "Energy handling mode changed",
+        "nl": "Energiebeheermodus is veranderd"
+      },
+      "tokens": [
+        {
+          "name": "energy_handling_mode",
+          "type": "string",
+          "title": {
+            "en": "Energy handling mode",
+            "nl": "Energiebeheermodus"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -12,6 +12,9 @@ Supported devices:
 
 - GridSense Inverter
   Live solar production and total energy produced.
+  Start a Flow with "Energy handling mode changed" when the inverter's mode
+  changes. The new mode is available as the "Energy handling mode" text tag.
+  Mode changes are detected during polling, every 30 seconds.
 
 - GridSense Home Battery
   Live charge and discharge power, state of charge, and total energy charged
