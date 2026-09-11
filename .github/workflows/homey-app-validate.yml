@@ -11,16 +11,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # The Homey CLI compiles this app with `npx tsc`, which needs both
-      # `typescript` and the `@tsconfig/node16` base config that tsconfig.json
-      # extends. Both are devDependencies, so without an install step the
-      # compile fails with "unable to read configuration from
-      # `npx tsc --showConfig`". The validate action does not install
-      # dependencies itself.
-      #
-      # This uses `npm ci --ignore-scripts` to match exactly what the publish
-      # action does internally, so validate exercises the same install path
-      # that publishing will use.
+      # Install the pinned CLI and TypeScript compiler before validation,
+      # matching the install path used by the GitLab semantic-release job.
       - uses: actions/setup-node@v4
         with:
           node-version: 24
@@ -29,6 +21,6 @@ jobs:
       - name: Install dependencies
         run: npm ci --ignore-scripts
 
-      - uses: athombv/github-action-homey-app-validate@master
-        with:
-          level: verified
+      - run: npm run test:release
+
+      - run: npm exec -- homey app validate --level verified

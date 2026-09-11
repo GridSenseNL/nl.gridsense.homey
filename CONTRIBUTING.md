@@ -1,5 +1,8 @@
 # Contributing to Athom and Homey
 
+For this GridSense app, use Conventional Commits and follow [the release guide](RELEASING.md).
+GitLab automatically versions and publishes Homey Test releases from `main`.
+
 First off all, thank you for taking the time to contribute!
 
 The following is a set of guidelines for contributing to Athom and its packages, which are hosted in the [Athom Organization](https://github.com/athombv) on GitHub. These are just guidelines, not rules. Use your best judgment, and feel free to contact us if you have any questions.
