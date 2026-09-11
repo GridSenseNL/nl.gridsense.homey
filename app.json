@@ -192,6 +192,34 @@
       }
     }
   ],
+  "flow": {
+    "triggers": [
+      {
+        "id": "energy_handling_mode_changed",
+        "title": {
+          "en": "Energy handling mode changed",
+          "nl": "Energiebeheermodus is veranderd"
+        },
+        "tokens": [
+          {
+            "name": "energy_handling_mode",
+            "type": "string",
+            "title": {
+              "en": "Energy handling mode",
+              "nl": "Energiebeheermodus"
+            }
+          }
+        ],
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=gridsense-inverter"
+          }
+        ]
+      }
+    ]
+  },
   "capabilities": {
     "energy_handling_mode": {
       "type": "string",
