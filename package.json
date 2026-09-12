@@ -1,35 +1,35 @@
 {
-  "name": "nl.gridsense.homey",
-  "version": "1.0.0",
-  "scripts": {
-    "build": "tsc",
-    "typecheck": "tsc --noEmit",
-    "lint": "eslint --ext .js,.ts,.cjs --ignore-path .gitignore . --max-warnings=0",
-    "test:release": "node --test test/release/*.test.cjs",
-    "release": "semantic-release",
-    "release:homey:retry": "node scripts/release/retry-homey.cjs"
-  },
-  "devDependencies": {
-    "@semantic-release/changelog": "7.0.0",
-    "@semantic-release/commit-analyzer": "13.0.1",
-    "@semantic-release/git": "11.0.1",
-    "@semantic-release/gitlab": "13.3.3",
-    "@semantic-release/release-notes-generator": "14.1.1",
-    "@tsconfig/node16": "16.1.8",
-    "@types/homey": "npm:homey-apps-sdk-v3-types@0.3.12",
-    "@types/multicast-dns": "^7.2.4",
-    "@types/node": "24.13.4",
-    "eslint": "7.32.0",
-    "eslint-config-athom": "3.1.5",
-    "homey": "4.5.0",
-    "homey-api": "3.20.0",
-    "semantic-release": "25.0.9",
-    "semver": "7.7.4",
-    "typescript": "5.9.3"
-  },
-  "dependencies": {
-    "homey-log": "2.1.2",
-    "multicast-dns": "7.2.5"
-  },
-  "packageManager": "yarn@1.22.22"
+    "name": "nl.gridsense.homey",
+    "version": "1.0.0",
+    "scripts": {
+        "build": "tsc",
+        "typecheck": "tsc --noEmit",
+        "lint": "eslint --ext .js,.ts,.cjs --ignore-path .gitignore . --max-warnings=0",
+        "test:release": "node --test test/release/*.test.cjs",
+        "release": "semantic-release",
+        "release:homey:retry": "node scripts/release/retry-homey.cjs"
+    },
+    "devDependencies": {
+        "@semantic-release/changelog": "7.0.0",
+        "@semantic-release/commit-analyzer": "13.0.1",
+        "@semantic-release/git": "11.0.1",
+        "@semantic-release/gitlab": "13.3.3",
+        "@semantic-release/release-notes-generator": "14.1.1",
+        "@tsconfig/node16": "16.1.8",
+        "@types/homey": "npm:homey-apps-sdk-v3-types@0.3.12",
+        "@types/multicast-dns": "^7.2.4",
+        "@types/node": "24.13.4",
+        "eslint": "7.32.0",
+        "eslint-config-athom": "3.1.5",
+        "homey": "4.5.0",
+        "homey-api": "3.20.0",
+        "semantic-release": "25.0.9",
+        "semver": "7.7.4",
+        "typescript": "5.9.3"
+    },
+    "dependencies": {
+        "homey-log": "2.1.2",
+        "multicast-dns": "7.2.5"
+    },
+    "packageManager": "yarn@1.22.22"
 }

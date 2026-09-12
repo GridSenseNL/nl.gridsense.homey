@@ -6,18 +6,29 @@ const { version } = require('../../app.json');
 
 // Recover the Homey publish step after semantic-release has already pushed its
 // tag. Require that exact release checkout, so a retry cannot upload newer code.
-const tags = execFileSync('git', ['tag', '--points-at', 'HEAD'], { encoding: 'utf8' }).trim().split('\n');
-const changes = execFileSync('git', ['status', '--porcelain'], { encoding: 'utf8' }).trim();
-if (!tags.includes(`v${version}`) || changes) {
-  throw new Error(`Retry requires a clean checkout of v${version}.`);
+const tagOutput = execFileSync('git', ['tag', '--points-at', 'HEAD'], {
+    encoding: 'utf8',
+});
+const releaseTags = tagOutput.trim().split('\n');
+const workingTreeStatus = execFileSync('git', ['status', '--porcelain'], {
+    encoding: 'utf8',
+});
+const hasUncommittedChanges = workingTreeStatus.trim().length > 0;
+
+if (!releaseTags.includes(`v${version}`) || hasUncommittedChanges) {
+    throw new Error(`Retry requires a clean checkout of v${version}.`);
 }
 
-publish({}, {
-  cwd: process.cwd(),
-  env: process.env,
-  nextRelease: { version },
-  logger: console,
-}).catch((error) => {
-  console.error(error.message);
-  process.exitCode = 1;
+const releaseContext = {
+    cwd: process.cwd(),
+    env: process.env,
+    nextRelease: {
+        version,
+    },
+    logger: console,
+};
+
+publish({}, releaseContext).catch((error) => {
+    console.error(error.message);
+    process.exitCode = 1;
 });

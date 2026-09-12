@@ -1,38 +1,106 @@
 {
-  "extends": "athom/homey-app",
-  "settings": {
-    "import/resolver": {
-      "node": {
-        "extensions": [".js", ".ts", ".json"]
-      }
+    "extends": "athom/homey-app",
+    "settings": {
+        "import/resolver": {
+            "node": {
+                "extensions": [
+                    ".js",
+                    ".ts",
+                    ".json"
+                ]
+            }
+        },
+        "node": {
+            "tryExtensions": [
+                ".js",
+                ".ts",
+                ".json",
+                ".node"
+            ]
+        }
     },
-    "node": {
-      "tryExtensions": [".js", ".ts", ".json", ".node"]
-    }
-  },
-  "rules": {
-    "import/extensions": ["error", "ignorePackages", {
-      "js": "never",
-      "ts": "never"
-    }],
-    "node/no-unpublished-import": ["error", { "allowModules": ["homey"] }]
-  },
-  "overrides": [{
-    "files": ["scripts/**/*.cjs", "test/**/*.cjs"],
-    "env": { "node": true },
-    "parserOptions": { "ecmaVersion": 2020, "project": null },
     "rules": {
-      "import/no-extraneous-dependencies": ["error", { "devDependencies": true }],
-      "import/extensions": ["error", "ignorePackages", { "cjs": "always" }],
-      "@typescript-eslint/no-floating-promises": "off",
-      "@typescript-eslint/no-misused-promises": "off",
-      "node/no-unpublished-require": "off",
-      "node/no-unpublished-import": "off",
-      "node/no-unsupported-features/es-syntax": ["error", {
-        "version": ">=24.15.0",
-        "ignores": ["modules", "dynamicImport"]
-      }],
-      "no-console": "off"
-    }
-  }]
+        "import/extensions": [
+            "error",
+            "ignorePackages",
+            {
+                "js": "never",
+                "ts": "never"
+            }
+        ],
+        "node/no-unpublished-import": [
+            "error",
+            {
+                "allowModules": [
+                    "homey"
+                ]
+            }
+        ]
+    },
+    "overrides": [
+        {
+            "files": [
+                "scripts/**/*.cjs",
+                "test/**/*.cjs"
+            ],
+            "env": {
+                "node": true
+            },
+            "parserOptions": {
+                "ecmaVersion": 2020,
+                "project": null
+            },
+            "rules": {
+                "import/no-extraneous-dependencies": [
+                    "error",
+                    {
+                        "devDependencies": true
+                    }
+                ],
+                "import/extensions": [
+                    "error",
+                    "ignorePackages",
+                    {
+                        "cjs": "always"
+                    }
+                ],
+                "@typescript-eslint/no-floating-promises": "off",
+                "@typescript-eslint/no-misused-promises": "off",
+                "node/no-unpublished-require": "off",
+                "node/no-unpublished-import": "off",
+                "node/no-unsupported-features/es-syntax": [
+                    "error",
+                    {
+                        "version": ">=24.15.0",
+                        "ignores": [
+                            "modules",
+                            "dynamicImport"
+                        ]
+                    }
+                ],
+                "no-console": "off",
+                "indent": [
+                    "error",
+                    4
+                ],
+                "curly": [
+                    "error",
+                    "all"
+                ],
+                "max-statements-per-line": [
+                    "error",
+                    {
+                        "max": 1
+                    }
+                ],
+                "id-length": [
+                    "error",
+                    {
+                        "min": 2,
+                        "properties": "never"
+                    }
+                ]
+            }
+        }
+    ]
 }

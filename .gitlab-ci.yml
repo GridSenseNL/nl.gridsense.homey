@@ -5,46 +5,46 @@
 # Node 24 matches what the Homey CLI itself requires.
 
 default:
-  image: node:24-alpine
-  before_script:
-    - npm ci --ignore-scripts --prefer-offline
-  cache:
-    key:
-      files:
-        - package-lock.json
-    paths:
-      - .npm/
+    image: node:24-alpine
+    before_script:
+        - npm ci --ignore-scripts --prefer-offline
+    cache:
+        key:
+            files:
+                - package-lock.json
+        paths:
+            - .npm/
 
 variables:
-  npm_config_cache: "$CI_PROJECT_DIR/.npm"
+    npm_config_cache: "$CI_PROJECT_DIR/.npm"
 
 stages:
-  - test
-  - release
+    - test
+    - release
 
 lint:
-  stage: test
-  script:
-    - npm run lint
+    stage: test
+    script:
+        - npm run lint
 
 release-tests:
-  stage: test
-  script:
-    - npm run test:release
+    stage: test
+    script:
+        - npm run test:release
 
 typecheck:
-  stage: test
-  script:
-    - npm run typecheck
+    stage: test
+    script:
+        - npm run typecheck
 
 build:
-  stage: test
-  script:
-    - npm run build
-  artifacts:
-    paths:
-      - .homeybuild/
-    expire_in: 1 week
+    stage: test
+    script:
+        - npm run build
+    artifacts:
+        paths:
+            - .homeybuild/
+        expire_in: 1 week
 
 # Mirrors the Homey App Store validation that athombv/github-action-homey-app-validate
 # runs on GitHub (`npx homey app validate --level verified`). This is the check
@@ -55,29 +55,33 @@ build:
 # `typescript` and the `@tsconfig/node16` base config that tsconfig.json extends.
 # The shared before_script installs them first.
 validate:
-  stage: test
-  script:
-    - npm exec -- homey app validate --level verified
+    stage: test
+    script:
+        - npm exec -- homey app validate --level verified
 
 # Releases run only on main after every test job succeeds. Keep the resource
 # lock for the entire version/tag/upload sequence to prevent concurrent releases.
 # Required masked/protected variables: HOMEY_PAT and RELEASE_TOKEN (api and
 # write_repository scopes, permitted to push to main and v* tags).
 release:
-  stage: release
-  resource_group: homey-release
-  interruptible: false
-  variables:
-    GIT_DEPTH: "0"
-  rules:
-    - if: '$CI_COMMIT_BRANCH == "main" && ($CI_PIPELINE_SOURCE == "push" || $CI_PIPELINE_SOURCE == "web")'
-  before_script:
-    - apk add --no-cache git
-    - npm ci --ignore-scripts --prefer-offline
-  script:
-    - test -n "$RELEASE_TOKEN" || { echo "RELEASE_TOKEN must be set." >&2; exit 1; }
-    - export GL_TOKEN="$RELEASE_TOKEN"
-    - export GL_URL="$CI_SERVER_URL"
-    # semantic-release supplies GL_TOKEN for Git authentication. Override the
-    # checkout URL, which otherwise contains GitLab's read-only job token.
-    - npm run release -- --repository-url "${CI_PROJECT_URL}.git"
+    stage: release
+    resource_group: homey-release
+    interruptible: false
+    variables:
+        GIT_DEPTH: "0"
+    rules:
+        - if: '$CI_COMMIT_BRANCH == "main" && ($CI_PIPELINE_SOURCE == "push" || $CI_PIPELINE_SOURCE == "web")'
+    before_script:
+        - apk add --no-cache git
+        - npm ci --ignore-scripts --prefer-offline
+    script:
+        - |
+            if [ -z "$RELEASE_TOKEN" ]; then
+                echo "RELEASE_TOKEN must be set." >&2
+                exit 1
+            fi
+        - export GL_TOKEN="$RELEASE_TOKEN"
+        - export GL_URL="$CI_SERVER_URL"
+        # semantic-release supplies GL_TOKEN for Git authentication. Override the
+        # checkout URL, which otherwise contains GitLab's read-only job token.
+        - npm run release -- --repository-url "${CI_PROJECT_URL}.git"

@@ -1,45 +1,45 @@
 {
-  "branches": [
-    "main"
-  ],
-  "tagFormat": "v${version}",
-  "plugins": [
-    "@semantic-release/commit-analyzer",
-    "@semantic-release/release-notes-generator",
-    [
-      "@semantic-release/changelog",
-      {
-        "changelogTitle": "# Changelog"
-      }
+    "branches": [
+        "main"
     ],
-    "./scripts/release/homey.cjs",
-    [
-      "@semantic-release/git",
-      {
-        "assets": [
-          "CHANGELOG.md",
-          ".homeychangelog.json",
-          ".homeycompose/app.json",
-          "app.json",
-          "package.json",
-          "package-lock.json"
+    "tagFormat": "v${version}",
+    "plugins": [
+        "@semantic-release/commit-analyzer",
+        "@semantic-release/release-notes-generator",
+        [
+            "@semantic-release/changelog",
+            {
+                "changelogTitle": "# Changelog"
+            }
         ],
-        "message": "chore(release): ${nextRelease.version} [skip ci]"
-      }
-    ],
-    [
-      "@semantic-release/gitlab",
-      {
-        "successCommentCondition": false,
-        "failCommentCondition": false,
-        "assets": [
-          {
-            "url": "https://homey.app/a/nl.gridsense.homey/test/",
-            "label": "Homey Test",
-            "type": "other"
-          }
+        "./scripts/release/homey.cjs",
+        [
+            "@semantic-release/git",
+            {
+                "assets": [
+                    "CHANGELOG.md",
+                    ".homeychangelog.json",
+                    ".homeycompose/app.json",
+                    "app.json",
+                    "package.json",
+                    "package-lock.json"
+                ],
+                "message": "chore(release): ${nextRelease.version} [skip ci]"
+            }
+        ],
+        [
+            "@semantic-release/gitlab",
+            {
+                "successCommentCondition": false,
+                "failCommentCondition": false,
+                "assets": [
+                    {
+                        "url": "https://homey.app/a/nl.gridsense.homey/test/",
+                        "label": "Homey Test",
+                        "type": "other"
+                    }
+                ]
+            }
         ]
-      }
     ]
-  ]
 }

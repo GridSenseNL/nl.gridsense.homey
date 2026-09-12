@@ -1,26 +1,26 @@
 name: Validate Homey App
 on:
-  workflow_dispatch:
-  push:
-  pull_request:
+    workflow_dispatch:
+    push:
+    pull_request:
 
 jobs:
-  main:
-    name: Validate Homey App
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
+    main:
+        name: Validate Homey App
+        runs-on: ubuntu-latest
+        steps:
+            -   uses: actions/checkout@v4
 
-      # Install the pinned CLI and TypeScript compiler before validation,
-      # matching the install path used by the GitLab semantic-release job.
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 24
-          cache: npm
+            # Install the pinned CLI and TypeScript compiler before validation,
+            # matching the install path used by the GitLab semantic-release job.
+            -   uses: actions/setup-node@v4
+                with:
+                    node-version: 24
+                    cache: npm
 
-      - name: Install dependencies
-        run: npm ci --ignore-scripts
+            -   name: Install dependencies
+                run: npm ci --ignore-scripts
 
-      - run: npm run test:release
+            -   run: npm run test:release
 
-      - run: npm exec -- homey app validate --level verified
+            -   run: npm exec -- homey app validate --level verified
