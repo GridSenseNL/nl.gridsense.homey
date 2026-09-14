@@ -1,5 +1,5 @@
 {
-  "id": "nl.gridsense.homey",
+  "id": "nl.gridsense",
   "version": "1.0.2",
   "compatibility": ">=12.4.0",
   "sdk": 3,
