@@ -7,7 +7,7 @@ import GridSenseApiClient, {
 
 module.exports = class GridSenseGridMeterDriver extends Homey.Driver {
   async onInit(): Promise<void> {
-    this.homey.log('GridSenseGridMeterDriver init');
+    this.log('GridSenseGridMeterDriver init');
   }
 
   async onPairListDevices() {
@@ -22,7 +22,7 @@ module.exports = class GridSenseGridMeterDriver extends Homey.Driver {
       const gatewayUuid = (gw.getSetting('uuid') as string) || (gw.getData() as { id?: string }).id || '';
 
       if (!ip) {
-        this.homey.log(
+        this.log(
           'Gateway has no IP, skipping in grid meter pairing:',
           gw.getName(),
         );
@@ -35,7 +35,7 @@ module.exports = class GridSenseGridMeterDriver extends Homey.Driver {
       try {
         meters = await client.listImportExportMeters(gatewayUuid);
       } catch (err) {
-        this.homey.error(
+        this.error(
           'Failed to fetch energy meters from gateway',
           ip,
           err,
@@ -71,7 +71,7 @@ module.exports = class GridSenseGridMeterDriver extends Homey.Driver {
       }
     }
 
-    this.homey.log('Grid meters found for pairing:', devices);
+    this.log('Grid meters found for pairing:', devices);
     return devices;
   }
 };

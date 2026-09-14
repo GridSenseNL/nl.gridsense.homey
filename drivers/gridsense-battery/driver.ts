@@ -6,7 +6,7 @@ import GridSenseApiClient, {
 
 module.exports = class GridSenseBatteryDriver extends Homey.Driver {
   async onInit(): Promise<void> {
-    this.homey.log('GridSenseBatteryDriver init');
+    this.log('GridSenseBatteryDriver init');
   }
 
   async onPairListDevices() {
@@ -21,7 +21,7 @@ module.exports = class GridSenseBatteryDriver extends Homey.Driver {
       const gatewayUuid = (gw.getSetting('uuid') as string) || (gw.getData() as { id?: string }).id || '';
 
       if (!ip) {
-        this.homey.log(
+        this.log(
           'Gateway has no IP, skipping in battery pairing:',
           gw.getName(),
         );
@@ -34,7 +34,7 @@ module.exports = class GridSenseBatteryDriver extends Homey.Driver {
       try {
         batteries = await client.listBatteries(gatewayUuid);
       } catch (err) {
-        this.homey.error(
+        this.error(
           'Failed to fetch batteries from gateway',
           ip,
           err,
@@ -72,7 +72,7 @@ module.exports = class GridSenseBatteryDriver extends Homey.Driver {
       }
     }
 
-    this.homey.log('Battery devices found for pairing:', devices);
+    this.log('Battery devices found for pairing:', devices);
     return devices;
   }
 };

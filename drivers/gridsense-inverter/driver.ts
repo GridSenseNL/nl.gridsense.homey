@@ -7,7 +7,7 @@ import GridSenseApiClient, {
 
 module.exports = class GridSenseInverterDriver extends Homey.Driver {
   async onInit(): Promise<void> {
-    this.homey.log('GridSenseInverterDriver init');
+    this.log('GridSenseInverterDriver init');
   }
 
   async onPairListDevices() {
@@ -22,7 +22,7 @@ module.exports = class GridSenseInverterDriver extends Homey.Driver {
       const gatewayUuid = (gw.getSetting('uuid') as string) || (gw.getData() as { id?: string }).id || '';
 
       if (!ip) {
-        this.homey.log(
+        this.log(
           'Gateway has no IP, skipping in inverter pairing:',
           gw.getName(),
         );
@@ -35,7 +35,7 @@ module.exports = class GridSenseInverterDriver extends Homey.Driver {
       try {
         inverters = await client.listInverters(gatewayUuid);
       } catch (err) {
-        this.homey.error(
+        this.error(
           'Failed to fetch inverters from gateway',
           ip,
           err,
@@ -71,7 +71,7 @@ module.exports = class GridSenseInverterDriver extends Homey.Driver {
       }
     }
 
-    this.homey.log('Inverters found for pairing:', devices);
+    this.log('Inverters found for pairing:', devices);
     return devices;
   }
 };

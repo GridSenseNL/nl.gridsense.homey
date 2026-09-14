@@ -2,14 +2,14 @@ import Homey from 'homey';
 
 module.exports = class GridSenseGatewayDriver extends Homey.Driver {
   async onInit(): Promise<void> {
-    this.homey.log('GridSenseGatewayDriver init (using Homey Discovery)');
+    this.log('GridSenseGatewayDriver init (using Homey Discovery)');
   }
 
   async onPairListDevices() {
     const discoveryStrategy = this.getDiscoveryStrategy();
 
     const discoveryResults = discoveryStrategy.getDiscoveryResults();
-    this.homey.log('Discovery results', JSON.stringify(discoveryResults, null, 2));
+    this.log('Discovery results', JSON.stringify(discoveryResults, null, 2));
 
     // discoveryResults is an object: { [id]: DiscoveryResultMDNSSD }
     const devices = (Object.values(discoveryResults) as Homey.DiscoveryResultMDNSSD[]).map(
@@ -35,7 +35,7 @@ module.exports = class GridSenseGatewayDriver extends Homey.Driver {
       },
     );
 
-    this.homey.log('Pair devices list', devices);
+    this.log('Pair devices list', devices);
     return devices;
   }
 
