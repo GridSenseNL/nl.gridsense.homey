@@ -1,5 +1,5 @@
 {
-  "name": "nl.gridsense.homey",
+  "name": "nl.gridsense",
   "version": "1.0.0",
   "scripts": {
     "build": "tsc",
