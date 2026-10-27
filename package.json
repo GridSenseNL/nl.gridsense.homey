@@ -8,7 +8,7 @@
   },
   "devDependencies": {
     "@tsconfig/node16": "16.1.8",
-    "@types/homey": "npm:homey-apps-sdk-v3-types@0.3.12",
+    "@types/homey": "npm:homey-apps-sdk-v3-types@1.8.3",
     "@types/multicast-dns": "^7.2.4",
     "@types/node": "24.13.4",
     "eslint": "7.32.0",
