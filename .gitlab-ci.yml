@@ -5,7 +5,7 @@
 # Node 24 matches what the Homey CLI itself requires.
 
 default:
-  image: node:24-alpine
+  image: node:26-alpine
   before_script:
     - npm ci --ignore-scripts --prefer-offline
   cache:
